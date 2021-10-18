@@ -1,4 +1,3 @@
-#   注意！本程式需"dataset_1_7_psm資料檔"，執行"pgm_07_A.sas"取得。
 import os
 import joblib
 import math
@@ -25,7 +24,7 @@ def main():
         os.mkdir(model_path)
         pass
     
-    #   篩選資料
+    #   Filter data
     drop_list = []
     for i in list(dataset.index):
         if dataset['GP'][i] > 1:
@@ -64,10 +63,10 @@ def main():
             drop_list.append(i)
     dataset = dataset.drop(columns=drop_list)
     
-    #   設定Outcome
+    #   Set Outcome
     Y = dataset['LABVAL']
     
-    #   切資料集
+    #   Normalization & Split
     X = dataset.copy()
     #   --------------------------------------------------
     for i in list(X.columns):
@@ -107,7 +106,7 @@ def main():
     y_opd = Y.drop(index=tmp)
     y_opd.index = range(0, len(opd_indx))
     
-    #   建模
+    #   Establish model
     KF = KFold(n_splits=5)
     k = 1
     df1 = []

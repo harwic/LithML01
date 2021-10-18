@@ -1,4 +1,3 @@
-#   注意！本程式需"dataset_1_psm資料檔"，執行"pgm_07_A.sas"取得。
 import os
 import math
 import joblib
@@ -29,7 +28,7 @@ def main():
         os.mkdir(model_path)
         pass
     
-    #   篩選資料
+    #   Filter data
     drop_list = []
     for i in list(dataset.index):
         if dataset['GP'][i] > 1:
@@ -68,10 +67,10 @@ def main():
             drop_list.append(i)
     dataset = dataset.drop(columns=drop_list)
     
-    #   設定Outcome
+    #   Set Outcome
     Y = dataset['LABVAL']
     
-    #   標準化資料集
+    #   Normalization
     X = dataset.copy()
     for i in list(X.columns):
         if i in ['AGE', 'DIFFTM', 'LASTDOSE', 'DAILYDOSE', 'LASTFREQ', 'HG', 'WG', 'SBP', 'DBP'] or i.find('LAB_') != -1 or i.find('DG1_DD') != -1:
@@ -85,7 +84,7 @@ def main():
                 tmp.append(data[j][0])
             X.loc[:, i] = tmp
     
-    #   切資料集
+    #   Split
     tmp_indx, test_indx, opd_indx = [], [], []
     for i in list(X.index):
         if X['GP'][i] == -1:
@@ -124,7 +123,7 @@ def main():
         train_indx.append(indx1.tolist())
         val_indx.append(indx2.tolist())
     
-    #   特徵排名
+    #   Ranking
     df1 = LASSO_Ranker(tmp_X, tmp_Y, model_path)
     df1.loc[:, 'SVR-F'] = SVM_Ranker_1(tmp_X, tmp_Y, x_test, y_test, train_indx, val_indx)
     df1.loc[:, 'SVR-B'] = SVM_Ranker_2(tmp_X, tmp_Y, x_test, y_test, train_indx, val_indx)

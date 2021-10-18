@@ -1,4 +1,3 @@
-#   注意！本程式需"dataset_1_psm資料檔"，執行"pgm_07_A.sas"取得。
 import os
 import joblib
 import pandas as pd
@@ -29,7 +28,7 @@ def main():
         os.mkdir(model_path)
         pass
     
-    #   篩選資料
+    #   Filter data
     drop_list = []
     for i in list(dataset.index):
         if dataset['GP'][i] > 1:
@@ -70,7 +69,7 @@ def main():
             drop_list.append(i)
     dataset = dataset.drop(columns=drop_list)
     
-    #   設定Label
+    #   Set Label
     Y = []
     for i in list(dataset.index):
         if dataset['LABVAL'][i] < 0.6:
@@ -79,7 +78,7 @@ def main():
             Y.append(1)
     Y = pd.Series(Y)
     
-    #   切資料集
+    #   Normalization & Split
     X = dataset.copy()
     #   --------------------------------------------------
     for i in list(X.columns):
@@ -125,7 +124,7 @@ def main():
     grid.fit(tmp_X, tmp_Y)
     print(grid.best_params_)
     '''
-    #   建模
+    #   Establish model
     SKF = StratifiedKFold(n_splits=5)
     k = 1
     df1 = []
